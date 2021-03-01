@@ -1,0 +1,127 @@
+#!/usr/bin/env bash
+#
+#@ 0.0.1-beta
+#
+#? [-options] ARG1 [ARG2]
+#
+#: Brief script description. Displayed in usage message.
+#: May be multiple lines. Consecutive omment-only lines beginning with '#:'
+#: will be combined into the description.
+
+# Uncomment to see debug output
+# set -x
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+# ──── globals ────
+
+work_dir=$(dirname "$(readlink "$0" 2>/dev/null)")
+[[ -z "$work_dir" ]] && exit $?
+
+readonly script_name="${0##*/}"
+readonly conf_file="${work_dir}/script.conf"
+readonly usage_lib="${work_dir}/lib/usage-lib.sh"
+readonly message_lib="${work_dir}/lib/message-lib.sh"
+
+# store flag args
+declare s_opt_arg
+declare p_opt_arg
+# store flag state (set/unset)
+declare h_opt_set=0 # use 0/1 as true/false are builtins and may be modified
+declare d_opt_set=0
+
+# ──── cleanup ────
+
+clean_up() {
+  trap - ERR EXIT SIGINT SIGTERM
+  code="$?"
+  [[ code -eq 1 ]] && output_usage
+  #
+  # ↓ handle exit cleanup here ↓
+  #
+  exit "$code"
+}
+
+trap clean_up ERR EXIT SIGINT SIGTERM
+
+# ──── messages ────
+
+# shellcheck source=lib/message-lib.sh
+if [[ -f ${message_lib} ]]; then
+  source "${message_lib}"
+else
+  echo -e "error sourcing lib: ${message_lib}" && exit 1
+fi
+
+# ──── usage ────
+
+# shellcheck source=lib/usage-lib.sh
+if [[ -f ${usage_lib} ]]; then
+  source "${usage_lib}"
+else
+  die "error sourcing lib: ${usage_lib}"
+fi
+
+# ──── source config ────
+
+# shellcheck source=script.conf
+if [[ -f ${conf_file} ]]; then
+  source "${conf_file}" || die "error reading configuration file: ${conf_file}" "$?"
+else
+  die "configuration file missing: ${conf_file}" 1
+fi
+
+# ──── parse argv ────
+
+parse_user_options() {
+  # shellcheck disable=2034
+  while getopts ":hds:p:" o; do
+    case "${o}" in
+      s) #: Description for the -s option
+        s_opt_arg=${OPTARG}
+        info "-s option passed with arg: ${s_opt_arg}"
+        ;;
+
+      p) #: Description for -p option
+        p_opt_arg=${OPTARG}
+        info "-p option passed with arg: ${p_opt_arg}"
+        ;;
+
+      h) #: Display this usage information and exit
+        h_opt_set=1
+        info "-h option passed"
+        ;;
+
+      d) #: Display debugging information
+        d_opt_set=1
+        info "-d option passed"
+        set -x
+        ;;
+
+      *)
+        # prints usage, formatted error, exits with non-zero
+        output_usage
+        die "Unknown option: -$OPTARG" 1
+        ;;
+
+    esac
+  done
+  shift $((OPTIND - 1))
+}
+
+parse_user_options "${@}"
+
+# ──── script logic ────
+
+[[ "$h_opt_set" -gt 0 ]] && output_usage && exit 0
+
+#
+#
+#
+#
+#
+#
+
+exit 0
