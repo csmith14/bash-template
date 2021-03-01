@@ -1,36 +1,38 @@
-# minimal-safe-bash-template
-My Minimal Safe Bash Script Template. 
+# bash-template
+
+![bash](https://img.shields.io/badge/bash-v5.1-blue.svg?style=flat-square)
+
+My Bash Script Template.
+
+Based on [leogtzr/minimal-safe-bash-template](https://github.com/leogtzr/minimal-safe-bash-template).
+This fork addresses several issues present in the original, and introduces several new features.
+
+All script files have been linted with `shellcheck`. All script contents and overall structure follow
+[Google's shell style guide](https://google.github.io/styleguide/shellguide.html).
+All functions are documented according to Google's style guide recommendations.
+
+The main script file integrates an inline doc-comment syntax which is used by `lib/usage-lib.sh.` to
+generate the usage output when `-h` flag is passed. Of course, this can be replaced with a static `heredoc`
+if desired. Since `usage-lib` is sourced into the main script file, the change is easy to make.
+
+## Environment
+
+### Bash v5.1
+
+This template assumes use in an environment that has bash version ^5.1. Some builtins used within the
+script files need a minimum version of 5.1.
+
+### Testing/Linting
+
+The following tools are used to test, lint, and format the script files. **None are required** to use the
+template, but **all are highly recommended** for the best bash script development experience.
+
+- [bats (bats-core)](https://bats-core.readthedocs.io/en/latest/index.html)
+- [shellcheck](https://github.com/koalaman/shellcheck#user-content-installing)
+- [shfmt](https://github.com/mvdan/sh)
 
 ## Usage examples
 
-```
-$ ./template-v1.sh -f
-flag option set
-$ ./template-v1.sh -f -a 535
-flag option set
-Using -a option -> arg: [535]
-$ ./template-v1.sh -f -a "Hello World"
-flag option set
-Using -a option -> arg: [Hello World]
-$ ./template-v1.sh -f -a "Hello World" --abc pi
-flag option set
-Using --abc option -> arg: [pi]
-Using -a option -> arg: [Hello World]
-$ ./template-v1.sh -f -a "Hello World" --abc=3.141592
-flag option set
-Using --abc option -> arg: [3.141592]
-Using -a option -> arg: [Hello World]
-$ ./template-v1.sh --abc "hello, reader"
-Using --abc option -> arg: [hello, reader]
-$ ./template-v1.sh --abc "hello, reader" -f
-flag option set
-Using --abc option -> arg: [hello, reader]
-$ ./template-v1.sh --abc "hello, reader" -f -a23
-flag option set
-Using --abc option -> arg: [hello, reader]
-Using -a option -> arg: [23]
-$ ./template-v1.sh -a52 -f
-flag option set
-Using -a option -> arg: [52]
+```bash
 
 ```
