@@ -97,7 +97,7 @@ parse_user_options() {
       d) #: Display debugging information
         d_opt_set=1
         info "-d option passed"
-        set -x
+        # set -x
         ;;
 
       *)
