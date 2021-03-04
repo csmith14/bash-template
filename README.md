@@ -34,5 +34,14 @@ template, but **all are highly recommended** for the best bash script developmen
 ## Usage examples
 
 ```bash
+# specs
+$ bats test/message-lib.bats
+ ✓ invoking debug with unset 'd_opt_set' results in no output and status 0
+ ✓ invoking debug with 'd_opt_set=0' results in no output and status 0
+ ✓ invoking debug with 'd_opt_set=1' results in formatted output
+ ✓ invoking info results in formatted output
+ ✓ invoking success results in formatted output
+
+5 tests, 0 failures
 
 ```
