@@ -27,10 +27,15 @@ get_num_lines() {
   # $script_name unset or empty,
   [[ -z "${script_name-}" ]] && doc_header_line_count=0
 
+  # if value not already set, evaluate it
   if [[ -z "${doc_header_line_count-}" ]]; then
     doc_header_line_count="$({
       grep -E -n -m 1 -v '^#' "$script_name" | grep -E '^\d+' | sed 's/://g'
-    } || echo 0)"
+    } || echo 2)"
+
+    # correct for index offset
+    ((doc_header_line_count -= 1))
+
     readonly doc_header_line_count
   fi
 
@@ -95,7 +100,7 @@ get_call_signature() {
   # search for first line with call-signature indicator '#?'
   call_signature="$(head -n "$num_lines" "$script_name" | { grep -m 1 '^#?' || echo ''; })"
 
-  [[ -n "$call_signature" ]] && call_signature="${call_signature//#\?/}"
+  [[ -n "$call_signature" ]] && call_signature=$(echo " ${call_signature//#\? /}" | sed -E 's/ +/ /g')
   echo "$call_signature"
 }
 
@@ -115,7 +120,7 @@ get_description() {
     grep -E '^#:' || echo ''
   })"
 
-  [[ -n "$description" ]] && description="${description//#:/}"
+  [[ -n "$description" ]] && description="${description//#: /}"
   echo "$description"
 }
 
