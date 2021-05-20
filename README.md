@@ -10,9 +10,21 @@ This fork addresses several issues present in the original, and introduces sever
 All script contents and overall structure follow [Google's shell style guide](https://google.github.io/styleguide/shellguide.html).
 All functions are documented according to Google's style guide recommendations.
 
-## Library
+## Script Libs
 
-### Usage
+### message-lib
+
+Provides the following functions for printing consistently-formatted messages:
+
+| Function  | Description                              | Example output              |
+| --------- | ---------------------------------------- | --------------------------- |
+| `debug`   | prints debug-level message               | [ DEBUG ] debugging message |
+| `info`    | prints info-level message                | [ ℹ ] debugging message     |
+| `success` | prints success message                   | [ OK ] hooray!              |
+| `die`     | prints formatted error message and exits | [ FAIL ] oh dear            |
+| `user`    | prints prompt and reads user input       | ---                         |
+
+### usage-lib
 
 The main script file utilizes an inline doc-comment syntax, which is parsed and formatted by `lib/usage-lib.sh` to
 generate the help/usage output:
@@ -93,24 +105,37 @@ To perform formatting:
 $ format.sh
 
 All files linted!
-
 ```
 
 ### Testing
 
-To run all tests: `$ bats ./test`.
-
-Sample output:
+The `test.sh` script runs all tests and formats each output.
 
 ```bash
+$ test.sh
+
+ Running 2 test suites...
+ -----
+
+ 1. message-lib
+ --
  ✓ invoking debug with unset 'd_opt_set' results in no output and status 0
  ✓ invoking debug with 'd_opt_set=0' results in no output and status 0
  ✓ invoking debug with 'd_opt_set=1' results in formatted output
  ✓ invoking info results in formatted output
  ✓ invoking success results in formatted output
+
+5 tests, 0 failures
+
+
+ 2. usage-lib
+ --
  ✓ get_num_lines sets doc_header_line_count to 0 if script_name unset
  ✓ get_num_lines sets doc_header_line_count to the correct value
- ✓ format_usage_section outputs args formatted as title and content
 
-8 tests, 0 failures
+2 tests, 0 failures
+
+
+ 🎉 All suites have passed
+
 ```
