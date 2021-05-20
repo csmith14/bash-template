@@ -25,11 +25,12 @@ readonly conf_file="${work_dir}/script.conf"
 readonly usage_lib="${work_dir}/lib/usage-lib.sh"
 readonly message_lib="${work_dir}/lib/message-lib.sh"
 
-# store flag args
+# flag arg values (arbitrary value)
 declare s_opt_arg
 declare p_opt_arg
-# store flag state (set/unset)
-declare h_opt_set=0 # use 0/1 as true/false are builtins and may be modified
+
+# flag states (unset=0|set=1)
+declare h_opt_set=0 # use 0/1 as true/false are shell-builtins (may be modified)
 declare d_opt_set=0
 
 # ──── cleanup ────
